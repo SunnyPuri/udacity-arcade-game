@@ -1,0 +1,28 @@
+body {
+    text-align: center;
+    background-image: url("../images/garden.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+
+.avatar{
+    height: 100px;
+    cursor: pointer;
+}
+
+.avatar-title{
+    font-weight: 600;
+    font-size: 18px;
+    margin-top: -20px;
+}
+
+.stars li {
+    list-style: none;
+    display: inline-block;
+}
+
+.pause-game{
+    font-weight: 600;
+    font-style: italic;
+}
