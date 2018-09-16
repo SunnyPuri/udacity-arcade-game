@@ -1,23 +1,19 @@
-let avatar = [
-    'images/char-boy.png',
-    'images/char-cat-girl.png',
-    'images/char-horn-girl.png',
-    'images/char-pink-girl.png',
-    'images/char-princess-girl.png'
-];
 
-let pause = false;
-let level = 3;
-let currentLevel = 3;
-let score = 0;
+var Init= function(){
+    this.avatar = [
+        'images/char-boy.png',
+        'images/char-cat-girl.png',
+        'images/char-horn-girl.png',
+        'images/char-pink-girl.png',
+        'images/char-princess-girl.png'
+    ];
+    
+    this.pause = false;
+    this.score = 0;
 
-avatar.forEach((data, index)=>{
-    $("#avatar").append(`
-        <img class="avatar" src="${data}" onclick="changeAvatar(${index})">
-    `)
-});
+}
 
-function initStars(){
+Init.prototype.initStars = function initStars(){
     $(".stars").empty();
     for(let i=0; i<3; i++){
         $(".stars").append(
@@ -26,13 +22,27 @@ function initStars(){
     }
 }
 
-initStars();
+Init.prototype.changeAvatar = function changeAvatar(index){
+    player.player = this.avatar[index];
+}
 
-function addStars(){
+Init.prototype.addStars = function addStars(){
     let stars = $(".fa-star-o");
     $(stars[0]).toggleClass("fa-star-o fa-star");
 }
 
+Init.prototype.showAvatarList = function(){
+    this.avatar.forEach((data, index)=>{
+        $("#avatar").append(`
+            <img class="avatar" src="${data}" onclick="init.changeAvatar(${index})">
+        `)
+    });
+}
+
+let init = new Init();
+
+init.initStars();
+init.showAvatarList();
 
 // Enemies our player must avoid
 var Enemy = function(x, y, speed) {
@@ -56,7 +66,7 @@ Enemy.prototype.update = function(dt) {
     // which will ensure the game runs at the same speed for
     // all computers.
 
-    if(pause){
+    if(init.pause){
         return;
     }
 
@@ -71,9 +81,9 @@ Enemy.prototype.update = function(dt) {
         player.x + 80 > this.x &&
         player.y < this.y + 60 &&
         60 + player.y > this.y) {
-            score = 0;
-            $("#score").text(score);
-            initStars();
+            init.score = 0;
+            $("#score").text(init.score);
+            init.initStars();
             player.x = 202;
             player.y = 405;
     };
@@ -130,10 +140,10 @@ Player.prototype.handleInput = function(key){
 
     if(this.y < 0){
         setTimeout(()=>{
-            score++;
-            $("#score").text(score);
-            if(score == 3 || score == 5 || score == 10){
-                addStars();
+            init.score++;
+            $("#score").text(init.score);
+            if(init.score == 3 || init.score == 5 || init.score == 10){
+                init.addStars();
             }
             this.x = 202;
             this.y = 405;
@@ -144,9 +154,7 @@ Player.prototype.handleInput = function(key){
 var player = new Player(202, 405);
 
 
-function changeAvatar(index){
-    player.player = avatar[index];
-} 
+ 
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
@@ -160,10 +168,10 @@ document.addEventListener('keyup', function(e) {
 
 
     if(e.keyCode == 80){
-        pause = !pause;
+        init.pause = !init.pause;
     }
     
-    if(!pause){
+    if(!init.pause){
         player.handleInput(allowedKeys[e.keyCode]);
     }
     //console.log(e.keyCode);
